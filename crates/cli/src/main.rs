@@ -36,7 +36,7 @@ enum Command {
 
         /// Comma-separated list of output formats to generate.
         ///
-        /// Supported: `css`, `tailwind`. Defaults to all.
+        /// Supported: `css`, `tailwind`, `ios`, `android`. Defaults to `css,tailwind`.
         #[arg(short, long, value_delimiter = ',', default_values_t = vec!["css".to_owned(), "tailwind".to_owned()])]
         output: Vec<String>,
 
@@ -154,9 +154,11 @@ fn run_build(input: &Path, outputs: &[String], outdir: &Path) -> Result<(), CliE
         let files = match format_name.as_str() {
             "css" => collet_tokens_output_css::generate(&resolved),
             "tailwind" => collet_tokens_output_tailwind::generate(&resolved),
+            "ios" => collet_tokens_output_ios::generate(&resolved),
+            "android" => collet_tokens_output_android::generate(&resolved),
             other => {
                 eprintln!(
-                    "{} Unknown output format: {other} (supported: css, tailwind)",
+                    "{} Unknown output format: {other} (supported: css, tailwind, ios, android)",
                     "warning:".yellow().bold()
                 );
                 continue;
@@ -165,6 +167,15 @@ fn run_build(input: &Path, outputs: &[String], outdir: &Path) -> Result<(), CliE
 
         for file in &files {
             let dest = outdir.join(&file.path);
+            // Create parent directories for nested output paths (e.g., values/colors.xml).
+            if let Some(parent) = dest.parent() {
+                fs::create_dir_all(parent).map_err(|e| {
+                    CliError::io(
+                        format!("Failed to create directory {}", parent.display()),
+                        e,
+                    )
+                })?;
+            }
             fs::write(&dest, &file.content)
                 .map_err(|e| CliError::io(format!("Failed to write {}", dest.display()), e))?;
             let size = file.content.len();

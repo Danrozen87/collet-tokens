@@ -17,6 +17,8 @@ workspace = true
 collet-tokens-core = { path = "../core" }
 collet-tokens-output-css = { path = "../output-css" }
 collet-tokens-output-tailwind = { path = "../output-tailwind" }
+collet-tokens-output-ios = { path = "../output-ios" }
+collet-tokens-output-android = { path = "../output-android" }
 clap = { workspace = true }
 colored = { workspace = true }
 

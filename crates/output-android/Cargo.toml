@@ -1,0 +1,13 @@
+[package]
+name = "collet-tokens-output-android"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Android XML resource output for collet-tokens"
+
+[lints]
+workspace = true
+
+[dependencies]
+collet-tokens-core = { path = "../core" }

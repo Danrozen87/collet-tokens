@@ -12,6 +12,62 @@ impl OklchColor {
         Self { l, c, h }
     }
 
+    /// Parse an sRGB hex color string and convert to oklch.
+    ///
+    /// Accepts `#rrggbb` or `rrggbb` (case-insensitive). Returns `None`
+    /// if the string is not a valid 6-digit hex color.
+    ///
+    /// Pipeline: hex → (r,g,b) 0.0–1.0 → gamma decode → linear RGB → oklab → oklch.
+    #[must_use]
+    pub fn from_hex(hex: &str) -> Option<Self> {
+        let hex = hex.strip_prefix('#').unwrap_or(hex);
+        if hex.len() != 6 {
+            return None;
+        }
+        let r = u8::from_str_radix(hex.get(0..2)?, 16).ok()?;
+        let g = u8::from_str_radix(hex.get(2..4)?, 16).ok()?;
+        let b = u8::from_str_radix(hex.get(4..6)?, 16).ok()?;
+
+        let (rf, gf, bf) = (
+            f64::from(r) / 255.0,
+            f64::from(g) / 255.0,
+            f64::from(b) / 255.0,
+        );
+
+        Some(srgb_to_oklch(rf, gf, bf))
+    }
+
+    /// Derive a dark-mode variant from a light-mode color.
+    ///
+    /// Uses a perceptually-aware mapping:
+    /// - Very light colors (surfaces, backgrounds) become very dark
+    /// - Very dark colors (text) become very light
+    /// - Mid-range colors (accents) shift lightness by a fixed amount
+    /// - Chroma is slightly reduced to stay within sRGB gamut at the new lightness
+    /// - Hue is preserved
+    #[must_use]
+    pub fn invert_lightness(self) -> Self {
+        let dark_l = if self.l > 0.9 {
+            // Near-white surfaces → near-black (0.13–0.17)
+            0.13 + (1.0 - self.l) * 0.4
+        } else if self.l < 0.35 {
+            // Very dark (text-like) → very light (0.80–0.90)
+            0.80 + self.l * 0.3
+        } else {
+            // Mid-range accents: mirror around 0.55 with compression
+            (1.1 - self.l).clamp(0.35, 0.85)
+        };
+
+        // Reduce chroma slightly to help with gamut at extreme lightness.
+        let dark_c = self.c * 0.85;
+
+        Self {
+            l: dark_l.clamp(0.0, 1.0),
+            c: dark_c,
+            h: self.h,
+        }
+    }
+
     /// Render as a CSS `oklch()` function value.
     ///
     /// # Example
@@ -60,6 +116,55 @@ fn float_to_u8(v: f64) -> u8 {
     )]
     let byte = (v.clamp(0.0, 1.0) * 255.0 + 0.5) as u8;
     byte
+}
+
+// ---------------------------------------------------------------------------
+// sRGB → oklch conversion pipeline (inverse of the below)
+// ---------------------------------------------------------------------------
+
+/// Convert a gamma-encoded sRGB color (each channel 0.0–1.0) to oklch.
+///
+/// Pipeline: sRGB gamma → linear RGB → LMS → cube root LMS → oklab → oklch.
+#[must_use]
+#[expect(
+    clippy::many_single_char_names,
+    reason = "l/m/s and r/g/b are standard color-science names"
+)]
+pub fn srgb_to_oklch(r: f64, g: f64, b: f64) -> OklchColor {
+    // Step 1: sRGB gamma → linear
+    let r_lin = srgb_gamma_to_linear(r);
+    let g_lin = srgb_gamma_to_linear(g);
+    let b_lin = srgb_gamma_to_linear(b);
+
+    // Step 2: linear sRGB → linear LMS via the standard matrix
+    let l = 0.412_221_470_8 * r_lin + 0.536_332_536_3 * g_lin + 0.051_445_992_9 * b_lin;
+    let m = 0.211_903_498_2 * r_lin + 0.680_699_545_1 * g_lin + 0.107_396_956_6 * b_lin;
+    let s = 0.088_302_461_9 * r_lin + 0.281_718_837_6 * g_lin + 0.629_978_700_5 * b_lin;
+
+    // Step 3: linear LMS → cube-root LMS
+    let l_ = l.cbrt();
+    let m_ = m.cbrt();
+    let s_ = s.cbrt();
+
+    // Step 4: cube-root LMS → oklab
+    let ok_l = 0.210_454_255_3 * l_ + 0.793_617_785 * m_ - 0.004_072_046_8 * s_;
+    let ok_a = 1.977_998_495_1 * l_ - 2.428_592_205 * m_ + 0.450_593_709_9 * s_;
+    let ok_b = 0.025_904_037_1 * l_ + 0.782_771_766_2 * m_ - 0.808_675_766 * s_;
+
+    // Step 5: oklab → oklch
+    let c = (ok_a * ok_a + ok_b * ok_b).sqrt();
+    let h = if c < 1e-10 {
+        0.0 // achromatic — hue is undefined, use 0
+    } else {
+        let h_deg = ok_b.atan2(ok_a).to_degrees();
+        if h_deg < 0.0 { h_deg + 360.0 } else { h_deg }
+    };
+
+    OklchColor {
+        l: ok_l.clamp(0.0, 1.0),
+        c,
+        h,
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -266,5 +371,117 @@ mod tests {
         assert_eq!(format_f64(0.5), "0.5");
         assert_eq!(format_f64(1.0), "1");
         assert_eq!(format_f64(0.123_456), "0.123456");
+    }
+
+    #[test]
+    fn from_hex_white() {
+        let c = OklchColor::from_hex("#ffffff").expect("valid hex");
+        assert!(
+            (c.l - 1.0).abs() < 0.01,
+            "white lightness should be ~1.0, got {}",
+            c.l
+        );
+        assert!(c.c < 0.01, "white chroma should be ~0, got {}", c.c);
+    }
+
+    #[test]
+    fn from_hex_black() {
+        let c = OklchColor::from_hex("#000000").expect("valid hex");
+        assert!(
+            c.l.abs() < 0.01,
+            "black lightness should be ~0.0, got {}",
+            c.l
+        );
+    }
+
+    #[test]
+    fn from_hex_roundtrip() {
+        // A known sRGB color: #3a5bc7 — convert to oklch and back to hex.
+        let c = OklchColor::from_hex("#3a5bc7").expect("valid hex");
+        let hex_back = c.to_hex();
+        // Allow +-2 per channel due to floating-point round-trip.
+        let orig: (u8, u8, u8) = (0x3a, 0x5b, 0xc7);
+        let r = u8::from_str_radix(&hex_back[1..3], 16).expect("r");
+        let g = u8::from_str_radix(&hex_back[3..5], 16).expect("g");
+        let b = u8::from_str_radix(&hex_back[5..7], 16).expect("b");
+        assert!(
+            (i16::from(r) - i16::from(orig.0)).unsigned_abs() <= 2,
+            "r mismatch: {r} vs {}",
+            orig.0
+        );
+        assert!(
+            (i16::from(g) - i16::from(orig.1)).unsigned_abs() <= 2,
+            "g mismatch: {g} vs {}",
+            orig.1
+        );
+        assert!(
+            (i16::from(b) - i16::from(orig.2)).unsigned_abs() <= 2,
+            "b mismatch: {b} vs {}",
+            orig.2
+        );
+    }
+
+    #[test]
+    fn from_hex_invalid() {
+        assert!(OklchColor::from_hex("#fff").is_none());
+        assert!(OklchColor::from_hex("zzzzzz").is_none());
+        assert!(OklchColor::from_hex("").is_none());
+    }
+
+    #[test]
+    fn from_hex_no_hash() {
+        let c = OklchColor::from_hex("ff0000").expect("valid hex without #");
+        assert!(c.l > 0.4, "red should have substantial lightness");
+        assert!(c.c > 0.1, "red should have substantial chroma");
+    }
+
+    #[test]
+    fn invert_lightness_white_becomes_dark() {
+        let white = OklchColor::new(1.0, 0.0, 0.0);
+        let dark = white.invert_lightness();
+        assert!(
+            dark.l < 0.2,
+            "white should become dark surface, got l={}",
+            dark.l
+        );
+    }
+
+    #[test]
+    fn invert_lightness_dark_text_becomes_light() {
+        let text = OklchColor::new(0.27, 0.003, 90.0);
+        let inv = text.invert_lightness();
+        assert!(
+            inv.l > 0.75,
+            "dark text should become light, got l={}",
+            inv.l
+        );
+    }
+
+    #[test]
+    fn invert_lightness_preserves_hue() {
+        let c = OklchColor::new(0.55, 0.15, 264.0);
+        let inv = c.invert_lightness();
+        assert!(
+            (inv.h - 264.0).abs() < f64::EPSILON,
+            "hue should be preserved"
+        );
+    }
+
+    #[test]
+    fn invert_lightness_reduces_chroma() {
+        let c = OklchColor::new(0.55, 0.25, 264.0);
+        let inv = c.invert_lightness();
+        assert!(inv.c < c.c, "chroma should be reduced for gamut safety");
+    }
+
+    #[test]
+    fn srgb_to_oklch_achromatic_grey() {
+        let grey = srgb_to_oklch(0.5, 0.5, 0.5);
+        assert!(grey.c < 0.01, "grey should be achromatic, got c={}", grey.c);
+        assert!(
+            grey.l > 0.4 && grey.l < 0.7,
+            "grey lightness ~0.53, got {}",
+            grey.l
+        );
     }
 }

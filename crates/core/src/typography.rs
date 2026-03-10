@@ -378,19 +378,8 @@ mod tests {
         let roles = resolve_typography(&config, &default_fonts());
 
         let expected = [
-            "display",
-            "h1",
-            "h2",
-            "h3",
-            "label-lg",
-            "label-md",
-            "label-sm",
-            "body-lg",
-            "body-md",
-            "body-sm",
-            "overline",
-            "caption",
-            "code",
+            "display", "h1", "h2", "h3", "label-lg", "label-md", "label-sm", "body-lg", "body-md",
+            "body-sm", "overline", "caption", "code",
         ];
 
         // Exactly 13 roles

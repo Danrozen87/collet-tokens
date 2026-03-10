@@ -116,7 +116,9 @@ version = "0.1.0"
 dependencies = [
  "clap",
  "collet-tokens-core",
+ "collet-tokens-output-android",
  "collet-tokens-output-css",
+ "collet-tokens-output-ios",
  "collet-tokens-output-tailwind",
  "colored",
  "tempfile",
@@ -132,7 +134,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "collet-tokens-output-android"
+version = "0.1.0"
+dependencies = [
+ "collet-tokens-core",
+]
+
+[[package]]
 name = "collet-tokens-output-css"
+version = "0.1.0"
+dependencies = [
+ "collet-tokens-core",
+]
+
+[[package]]
+name = "collet-tokens-output-ios"
 version = "0.1.0"
 dependencies = [
  "collet-tokens-core",

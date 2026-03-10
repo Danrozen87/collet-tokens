@@ -51,9 +51,11 @@ pub mod types;
 pub mod typography;
 pub mod validator;
 
-pub use color::{contrast_ratio, is_in_srgb_gamut, oklch_to_srgb, relative_luminance};
+pub use color::{
+    contrast_ratio, is_in_srgb_gamut, oklch_to_srgb, relative_luminance, srgb_to_oklch,
+};
 pub use issue::{Issue, Severity};
-pub use parser::{InputFormat, detect_format, parse, parse_json, parse_yaml};
+pub use parser::{InputFormat, detect_format, parse, parse_dtcg, parse_json, parse_yaml};
 pub use resolver::resolve;
 pub use types::{
     ColorPair, ContrastLevel, FontConfig, MotionConfig, OklchColor, ResolvedColor, ResolvedFonts,

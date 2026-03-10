@@ -1,0 +1,23 @@
+name: Validate Design Tokens
+on:
+  workflow_call:
+    inputs:
+      input:
+        description: 'Path to token file (YAML, JSON, or DTCG)'
+        required: true
+        type: string
+      contrast:
+        description: 'Contrast level: AA or AAA'
+        required: false
+        default: 'AA'
+        type: string
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install collet-tokens
+        run: cargo install --path crates/cli
+      - name: Validate tokens
+        run: collet-tokens validate --input ${{ inputs.input }}

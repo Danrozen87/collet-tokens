@@ -1,0 +1,29 @@
+name: 'Collet Tokens Validate'
+description: 'Validate design tokens for WCAG contrast, type scale, and spacing grid compliance'
+inputs:
+  input:
+    description: 'Path to token file'
+    required: true
+  contrast:
+    description: 'Contrast level (AA or AAA)'
+    required: false
+    default: 'AA'
+runs:
+  using: 'composite'
+  steps:
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+    - name: Cache cargo
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/
+          ~/.cargo/git/
+        key: collet-tokens-${{ runner.os }}
+    - name: Install collet-tokens
+      shell: bash
+      run: cargo install collet-tokens-cli --git https://github.com/Danrozen87/collet-tokens
+    - name: Validate
+      shell: bash
+      run: collet-tokens validate --input ${{ inputs.input }}

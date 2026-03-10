@@ -1,0 +1,16 @@
+# Example: Add to your repo's .github/workflows/tokens.yml
+name: Design Token Validation
+on:
+  push:
+    paths: ['tokens.yaml', 'tokens.json', '*.tokens.json']
+  pull_request:
+    paths: ['tokens.yaml', 'tokens.json', '*.tokens.json']
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Danrozen87/collet-tokens@main
+        with:
+          input: tokens.yaml

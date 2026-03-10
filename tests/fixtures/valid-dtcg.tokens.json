@@ -1,0 +1,88 @@
+{
+  "color": {
+    "$type": "color",
+    "surface": {
+      "$value": "#ffffff",
+      "$description": "Main background surface"
+    },
+    "surface-raised": {
+      "$value": "#fafaf9",
+      "$description": "Elevated surface"
+    },
+    "text-primary": {
+      "$value": "#1c1917",
+      "$description": "Primary text color"
+    },
+    "text-muted": {
+      "$value": "#57534e",
+      "$description": "Secondary text color"
+    },
+    "primary": {
+      "$value": "#3b82f6",
+      "$description": "Brand primary"
+    },
+    "success": {
+      "$value": "#22c55e"
+    },
+    "warning": {
+      "$value": "#eab308"
+    },
+    "danger": {
+      "$value": "#ef4444"
+    }
+  },
+  "font": {
+    "body": {
+      "$type": "fontFamily",
+      "$value": ["Inter", "system-ui", "sans-serif"]
+    },
+    "display": {
+      "$type": "fontFamily",
+      "$value": ["Plus Jakarta Sans", "system-ui", "sans-serif"]
+    },
+    "mono": {
+      "$type": "fontFamily",
+      "$value": ["JetBrains Mono", "ui-monospace", "monospace"]
+    }
+  },
+  "spacing": {
+    "$type": "dimension",
+    "xs": {
+      "$value": "0.25rem",
+      "$description": "Extra small spacing"
+    },
+    "sm": {
+      "$value": "0.5rem"
+    },
+    "md": {
+      "$value": "1rem"
+    },
+    "lg": {
+      "$value": "1.5rem"
+    },
+    "xl": {
+      "$value": "2rem"
+    }
+  },
+  "borderRadius": {
+    "$type": "dimension",
+    "none": {
+      "$value": "0"
+    },
+    "sm": {
+      "$value": "0.25rem"
+    },
+    "md": {
+      "$value": "0.5rem"
+    },
+    "lg": {
+      "$value": "0.75rem"
+    },
+    "xl": {
+      "$value": "1rem"
+    },
+    "full": {
+      "$value": "9999px"
+    }
+  }
+}
