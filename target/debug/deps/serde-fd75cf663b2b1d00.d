@@ -1,0 +1,14 @@
+/Users/danrozen87/Documents/Projekt/lab/collet-tokens/target/debug/deps/serde-fd75cf663b2b1d00.d: /Users/danrozen87/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /Users/danrozen87/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /Users/danrozen87/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /Users/danrozen87/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /Users/danrozen87/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /Users/danrozen87/Documents/Projekt/lab/collet-tokens/target/debug/build/serde-38f8b19ce6b3bd83/out/private.rs
+
+/Users/danrozen87/Documents/Projekt/lab/collet-tokens/target/debug/deps/libserde-fd75cf663b2b1d00.rlib: /Users/danrozen87/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /Users/danrozen87/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /Users/danrozen87/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /Users/danrozen87/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /Users/danrozen87/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /Users/danrozen87/Documents/Projekt/lab/collet-tokens/target/debug/build/serde-38f8b19ce6b3bd83/out/private.rs
+
+/Users/danrozen87/Documents/Projekt/lab/collet-tokens/target/debug/deps/libserde-fd75cf663b2b1d00.rmeta: /Users/danrozen87/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /Users/danrozen87/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /Users/danrozen87/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /Users/danrozen87/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /Users/danrozen87/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /Users/danrozen87/Documents/Projekt/lab/collet-tokens/target/debug/build/serde-38f8b19ce6b3bd83/out/private.rs
+
+/Users/danrozen87/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs:
+/Users/danrozen87/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs:
+/Users/danrozen87/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs:
+/Users/danrozen87/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs:
+/Users/danrozen87/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs:
+/Users/danrozen87/Documents/Projekt/lab/collet-tokens/target/debug/build/serde-38f8b19ce6b3bd83/out/private.rs:
+
+# env-dep:OUT_DIR=/Users/danrozen87/Documents/Projekt/lab/collet-tokens/target/debug/build/serde-38f8b19ce6b3bd83/out

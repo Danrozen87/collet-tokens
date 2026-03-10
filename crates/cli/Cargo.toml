@@ -1,0 +1,21 @@
+[package]
+name = "collet-tokens-cli"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "CLI for the collet-tokens design token compiler"
+
+[[bin]]
+name = "collet-tokens"
+path = "src/main.rs"
+
+[lints]
+workspace = true
+
+[dependencies]
+collet-tokens-core = { path = "../core" }
+collet-tokens-output-css = { path = "../output-css" }
+collet-tokens-output-tailwind = { path = "../output-tailwind" }
+clap = { workspace = true }
+colored = { workspace = true }

@@ -1,0 +1,14 @@
+collet: "1.0"
+
+fonts:
+  display: "'Inter', system-ui, sans-serif"
+  body: "'Inter', system-ui, sans-serif"
+  mono: "'JetBrains Mono', monospace"
+
+colors:
+  surface:
+    light: { l: 1.0, c: 0.0, h: 0 }
+    dark: { l: 0.13, c: 0.0, h: 0 }
+  text-primary:
+    light: { l: 0.7, c: 0.0, h: 0 }
+    dark: { l: 0.9, c: 0.0, h: 0 }
