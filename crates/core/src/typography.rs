@@ -373,6 +373,46 @@ mod tests {
     }
 
     #[test]
+    fn all_13_role_names_present_and_unique() {
+        let config = TypographyConfig::default();
+        let roles = resolve_typography(&config, &default_fonts());
+
+        let expected = [
+            "display",
+            "h1",
+            "h2",
+            "h3",
+            "label-lg",
+            "label-md",
+            "label-sm",
+            "body-lg",
+            "body-md",
+            "body-sm",
+            "overline",
+            "caption",
+            "code",
+        ];
+
+        // Exactly 13 roles
+        assert_eq!(roles.len(), expected.len(), "expected exactly 13 roles");
+
+        // All expected names are present
+        let names: Vec<&str> = roles.iter().map(|r| r.name.as_str()).collect();
+        for &expected_name in &expected {
+            assert!(
+                names.contains(&expected_name),
+                "missing role: {expected_name}"
+            );
+        }
+
+        // No duplicates
+        let mut seen = std::collections::HashSet::new();
+        for name in &names {
+            assert!(seen.insert(name), "duplicate role name: {name}");
+        }
+    }
+
+    #[test]
     fn overrides_apply() {
         let mut overrides = BTreeMap::new();
         overrides.insert("font-weight".to_owned(), "900".to_owned());

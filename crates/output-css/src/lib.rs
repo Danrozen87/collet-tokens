@@ -11,6 +11,16 @@ use std::fmt::Write;
 use collet_tokens_core::OutputFile;
 use collet_tokens_core::types::ResolvedTokens;
 
+/// Format a floating-point value as a rem string with minimal precision.
+///
+/// Uses up to 4 decimal places, then strips trailing zeros:
+/// `0.2500` → `0.25rem`, `1.0000` → `1rem`.
+fn fmt_rem(val: f64) -> String {
+    let s = format!("{val:.4}");
+    let trimmed = s.trim_end_matches('0').trim_end_matches('.');
+    format!("{trimmed}rem")
+}
+
 /// Generate CSS output files from resolved tokens.
 ///
 /// Returns a single [`OutputFile`] containing the complete `tokens.css`.
@@ -63,7 +73,7 @@ fn write_light_root(tokens: &ResolvedTokens, css: &mut String) {
     if !tokens.spacing.is_empty() {
         let _ = writeln!(css, "  /* Spacing */");
         for sp in &tokens.spacing {
-            let _ = writeln!(css, "  --space-{}: {:.4}rem;", sp.name, sp.value_rem);
+            let _ = writeln!(css, "  --space-{}: {};", sp.name, fmt_rem(sp.value_rem));
         }
         let _ = writeln!(css);
     }
@@ -296,7 +306,7 @@ mod tests {
     #[test]
     fn contains_spacing_vars() {
         let files = generate(&minimal_tokens());
-        assert!(files[0].content.contains("--space-1: 0.2500rem"));
+        assert!(files[0].content.contains("--space-1: 0.25rem"));
     }
 
     #[test]

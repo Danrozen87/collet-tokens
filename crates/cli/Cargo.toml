@@ -19,3 +19,6 @@ collet-tokens-output-css = { path = "../output-css" }
 collet-tokens-output-tailwind = { path = "../output-tailwind" }
 clap = { workspace = true }
 colored = { workspace = true }
+
+[dev-dependencies]
+tempfile = "3"

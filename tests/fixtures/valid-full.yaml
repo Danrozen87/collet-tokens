@@ -1,0 +1,59 @@
+fonts:
+  display: "'Inter', system-ui, sans-serif"
+  body: "'Source Sans 3', system-ui, sans-serif"
+  mono: "'JetBrains Mono', ui-monospace, monospace"
+
+colors:
+  surface:
+    light: { l: 1.0, c: 0.0, h: 0 }
+    dark: { l: 0.13, c: 0.01, h: 280 }
+  text-primary:
+    light: { l: 0.27, c: 0.003, h: 90 }
+    dark: { l: 0.87, c: 0.0, h: 0 }
+  text-muted:
+    light: { l: 0.45, c: 0.02, h: 75 }
+    dark: { l: 0.70, c: 0.02, h: 75 }
+  primary:
+    light: { l: 0.55, c: 0.25, h: 264 }
+    dark: { l: 0.65, c: 0.20, h: 264 }
+  success:
+    light: { l: 0.55, c: 0.18, h: 155 }
+    dark: { l: 0.65, c: 0.15, h: 155 }
+  warning:
+    light: { l: 0.75, c: 0.18, h: 85 }
+    dark: { l: 0.80, c: 0.15, h: 85 }
+  danger:
+    light: { l: 0.55, c: 0.22, h: 25 }
+    dark: { l: 0.65, c: 0.18, h: 25 }
+
+typography:
+  scale_ratio: 1.25
+  base_size: 16
+  fluid_headings: true
+
+spacing:
+  base: 4
+  scale: [0, 1, 2, 3, 4, 5, 6, 8, 10, 12, 14, 16, 20, 24, 32, 40, 48, 64]
+
+radius:
+  none: "0"
+  sm: "0.25rem"
+  md: "0.5rem"
+  lg: "0.75rem"
+  full: "9999px"
+
+motion:
+  durations:
+    fast: "100ms"
+    normal: "200ms"
+    smooth: "350ms"
+    slow: "500ms"
+  easings:
+    linear: "linear"
+    ease-out: "cubic-bezier(0.16, 1, 0.3, 1)"
+    ease-in: "cubic-bezier(0.7, 0, 0.84, 0)"
+    spring: "cubic-bezier(0.34, 1.56, 0.64, 1)"
+
+validation:
+  contrast_level: "AA"
+  min_body_size: 16
